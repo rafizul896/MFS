@@ -5,6 +5,7 @@ import Root from "../layout/Root";
 import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
 import Home from "../pages/Home/Home";
+import PrivetRoute from "./PrivetRoute";
 
 export const router = createBrowserRouter([
     {
@@ -28,7 +29,9 @@ export const router = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <DashBoard />,
+        element: <PrivetRoute>
+            <DashBoard />
+        </PrivetRoute>,
         errorElement: <ErrorPage />,
         children: [
             {

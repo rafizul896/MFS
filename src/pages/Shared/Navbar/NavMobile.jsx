@@ -42,7 +42,7 @@ const NavMobile = () => {
     };
 
     return (
-        <nav className="relative">
+        <nav className="relative z-10">
             <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer text-white">
                 <LuMenu className="w-8 h-8" />
             </div>
