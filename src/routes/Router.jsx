@@ -6,6 +6,7 @@ import Login from "../pages/Authentication/Login";
 import Register from "../pages/Authentication/Register";
 import Home from "../pages/Home/Home";
 import PrivetRoute from "./PrivetRoute";
+import ManageUsers from "../pages/Dashboard/Admin/ManageUsers";
 
 export const router = createBrowserRouter([
     {
@@ -38,8 +39,10 @@ export const router = createBrowserRouter([
                 path: 'send-money',
 
             },
+            // admin
             {
-
+                path: 'user-management',
+                element: <ManageUsers />
             }
         ]
     }

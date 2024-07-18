@@ -23,7 +23,7 @@ const Login = () => {
         },
         onError: e => {
             console.log(e.message)
-            toast.error(e.message)
+            toast.error('Invalid credentials')
         }
     })
 
@@ -91,7 +91,7 @@ const Login = () => {
                                     autoComplete='pin'
                                     name='pin'
                                     className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
-                                    type={show ? 'text' : 'password'}
+                                    type={show ? 'number' : 'password'}
                                 />
                                 <div onClick={() => setShow(!show)} className="absolute top-[30%] right-3 cursor-pointer">
                                     {

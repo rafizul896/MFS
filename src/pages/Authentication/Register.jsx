@@ -1,20 +1,34 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { useMutation } from "@tanstack/react-query";
 import { axiosCommon } from "../../hooks/useAxiosCommon";
+import { toast } from "react-toastify";
+import Select from 'react-select';
 
 const Register = () => {
     const [show, setShow] = useState(false);
+    const navigate = useNavigate();
+
+    const roleOptions = [
+        { value: 'User', label: 'User' },
+        { value: 'Agent', label: 'Agent' },
+    ];
 
     // use query
-    const {mutateAsync} = useMutation({
+    const { mutateAsync } = useMutation({
         mutationFn: async user => {
-            const {data} = await axiosCommon.post('/register',user)
+            const { data } = await axiosCommon.post('/register', user)
             return data
         },
-        onSuccess: () => {
-            console.log('success')
+        onSuccess: (data) => {
+            if (data.message == 'Already as a Account') {
+                toast.warning('This number or email as already an account')
+            }
+            else {
+                navigate('/login')
+                toast.success('User registered, pending approval')
+            }
         },
         onError: e => {
             console.log(e.message)
@@ -28,8 +42,13 @@ const Register = () => {
         const mobileNumber = from.number.value;
         const email = from.email.value;
         const pin = from.pin.value;
-        const user = { name, mobileNumber, email, pin };
+        const role = from.role.value;
+        const user = { name, mobileNumber, email, pin, role };
         console.log(user);
+
+        if (pin.length !== 5) {
+            return toast.warning('5-digit PIN (must be number)')
+        }
 
         await mutateAsync(user);
     }
@@ -61,7 +80,20 @@ const Register = () => {
                         <span className='w-1/5 border-b dark:border-gray-400 lg:w-1/4'></span>
                     </div>
                     <form onSubmit={handleCreateUser}>
-                        <div className='mt-4'>
+                        <div className='mt-4 flex-1'>
+                            <label
+                                className='block mb-2 text-sm font-medium text-gray-600 '
+                                htmlFor='name'
+                            >
+                                Account Type
+                            </label>
+                            <Select
+                                name="role"
+                                options={roleOptions}
+                                className="w-full"
+                            />
+                        </div>
+                        <div className='mt-4 flex-1'>
                             <label
                                 className='block mb-2 text-sm font-medium text-gray-600 '
                                 htmlFor='name'
@@ -69,6 +101,7 @@ const Register = () => {
                                 Username
                             </label>
                             <input
+                                required
                                 id='name'
                                 autoComplete='name'
                                 name='name'
@@ -84,6 +117,7 @@ const Register = () => {
                                 Mobile Number
                             </label>
                             <input
+                                required
                                 id='number'
                                 name='number'
                                 className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
@@ -98,6 +132,7 @@ const Register = () => {
                                 Email Address
                             </label>
                             <input
+                                required
                                 id='LoggingEmailAddress'
                                 autoComplete='email'
                                 name='email'
@@ -117,10 +152,11 @@ const Register = () => {
                             </div>
                             <div className="relative">
                                 <input
+                                    required
                                     id='pin'
                                     name='pin'
                                     className='block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300'
-                                    type={show ? 'text' : 'password'}
+                                    type={show ? 'number' : 'password'}
                                 />
                                 <div onClick={() => setShow(!show)} className="absolute top-[30%] right-3 cursor-pointer">
                                     {
